@@ -1,0 +1,103 @@
+Gaston VHF Radio plugin v1.0 Howto
+
+Here is the procedure how to change and add ATC sounds to the script.
+
+1. Description, function and supported files
+First only WAV files are supported, prefered is monoraul 8kHz 16bits which is quality close to real transmission
+between stations and aircrafts.
+Best to date source of ATC sounds is liveatc.net website. Search the station by airport ICAO code or use
+liveatc coverage map for your planned flight.
+Note frequency / station (ie. LFMN) and type of station (Tower/Approach) and click to archives link
+and select date/month and time period in ZULU time. Archives are upto 30 days old. Submit and download
+a MP3 file. You must convert it to WAV file in any audio sound program, most of them are free or shareware
+(ie. goldwave). Dont change the quality if possible and only save it to WAV.
+Save it to CHATTER folder in the following format <station><frequency>.WAV (ie. LFMN126780.WAV)
+Please note 30 minutes WAV file is uncompressed and even in low quality can take 30 MB. So 100 files eats 300 MB.
+In aviation world VHF range is about 118-136 MHz and every frequency has steps by 5 Hz usually.
+So if you have for example file LFMN126780 to hear it just turn aircrafts battery on and tune 126.78. If you have
+radios with 3 digits after MHz this frequency could not be tuned sorry (limit by the aircraft developer).
+In that case just rename it to LFMN126775 and tune 126.775MHz. If you select no defined frequency no sound or quiet
+sound (DUMMY.WAV) is played and last ATC feed is paused (lastsound). 
+Resumed when switched back. If battery is off you will hear repeating warning sound (RING.WAV).
+
+2. Folder structre
+I highly recommend you to create and store in the Scripts (disabled)/My scripts/ folder all of your 
+created and modified my_lua_xxx scripts where xxx is the prefix for area or route. You will keep them for next
+flights and use only one for current flight in the main scripts folder.
+CHATTER folder is for all of your WAV files, keep them here.
+
+3. Adding frequency with WAVe file to the script
+lets say you are flying from LFMN (Nice) to LFLY (Lyon). Lyon tower has archived feeds at frequency 118.100
+Download it from liveatc.net, convert to WAv, rename to LFLY118100.WAV and store to CHATTER folder.
+
+3.1 What needs to be done in the lua script.
+
+3.1.1 Add a sound file.
+
+Add this line where LFLY118100.WAV is a wave file and LFLY118100 is variable:
+
+local LFLY118100 = load_WAV_file(SCRIPT_DIRECTORY .. "CHATTER/LFLY118100.wav")
+
+Note add this line under the last similar line you found in the lua script
+
+3.1.2 Setting the volume of the sound
+
+Some files are by default played in full volume which is not necessary, you want it to hear in the background or so.
+Add this to set the gain of LFLY118100 sound for 10% of its value (0.1 is 10%, 1.0 is 100%):
+
+set_sound_gain(LFLY118100, 0.1);
+
+(including the ; ) Note add this line under the last similar line you found in the lua script. Its in the function section.
+
+3.1.3 Binding frequency to WAV file
+
+Add this line where 11810 is value given by VHF frequency radio and LFLY118100 is both play_sound and lastsound
+variables:
+
+if VHF == 11810 then pause_sound(lastsound); play_sound(LFLY118100); lastsound=LFLY118100; chatter=1 end
+
+Please note VHF is 5 digits frequency and sound variables has 6 digits.
+Note add this line under the last similar line you found in the lua script. Its in the function section.
+
+3.1.4 Adding exception for selected VHF frequency
+    
+Add this exception for last formula in the script. Look for ~= XXXXX where XXXXX is the last added 5 digs frequency
+and simply put another condition after it.
+For example you see "if VHF ~= 12678 and VHF ~= 12417 and VHF ~= 11870 then pause_sound blahblah"
+you see here 3 frequencies before then pause_sound, just add another one for our case 11810. Will be:
+"if VHF ~= 12678 and VHF ~= 12417 and VHF ~= 11870 and VHF ~= 11810 then pause_sound blahblah"
+
+So you added only the part: and VHF ~= 11810
+
+This can be trickypart if you have a lot of sounds but sorry i cannot do better. This row can be very long.
+
+3.2 Changing the sound
+
+You can change your frequency or the sound or both same way like stated before. Not add but only overwrite the values
+
+3.3 Deleting the sound
+
+You can delete your frequency or the sound or both deleting lines/values or part of it according statements
+in previous sections. If you are testing it, better then delete is add -- as first two signs on the line
+before any text, expressions and so on, this will skip the line and is usually in LUA used as comment or remark.
+
+3.4 Problems
+
+If you do a mistake you will hear it or lua will stop.
+Do not add any other symbols or spaces, code is very sensitive.
+If the ding dong sound before avionics is powered is annoying for you just replace the RING.WAV
+with the DUMMY.WAV, now it will be quiet.
+If you see lua stopped from some reason its not good, maybe there is error in code you did or its influenced
+by other script or addon who knows. You can try from plugins menu resume lua engine or load all scripts again.
+Note this can make negative effects for other lua scripts.
+
+4.0 After all
+
+Always do a backup somewhere of the lua file. And use only one lua radio at one time.
+Tested and works fine. Happy flying.
+
+Version 1.0
+Gaston 2017
+gastonreif@gmail.com
+
+
