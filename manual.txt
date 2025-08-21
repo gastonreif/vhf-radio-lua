@@ -1,8 +1,6 @@
-Gaston VHF Radio plugin v1.0 Howto
+Gaston VHF Radio plugin v1.1
 
-Here is the procedure how to change and add ATC sounds to the script.
-
-1. Description, function and supported files
+1. Description, supported files and function.
 First only WAV files are supported, prefered is monoraul 8kHz 16bits which is quality close to real transmission
 between stations and aircrafts.
 Best to date source of ATC sounds is liveatc.net website. Search the station by airport ICAO code or use
@@ -96,8 +94,8 @@ Note this can make negative effects for other lua scripts.
 Always do a backup somewhere of the lua file. And use only one lua radio at one time.
 Tested and works fine. Happy flying.
 
-Version 1.0
-Gaston 2017
+Version 1.1
+Gaston 2025
 gastonreif@gmail.com
 
 
